@@ -1,6 +1,8 @@
 package Order;
 
-public abstract class OrderStatus 
-{
-    
+public enum OrderStatus {
+    NEW,
+    PREPARING,
+    OUT_FOR_DELIVERY,
+    DELIVERED
 }
