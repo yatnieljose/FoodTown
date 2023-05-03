@@ -1,6 +1,7 @@
 import javax.swing.*;
 
 import Menu.MenuType.*;
+import Order.Order;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,16 +20,19 @@ public class FoodTown extends JFrame {
         restaurants.add(new Restaurant(new ChineseMenu(), "China Wok"));
         restaurants.add(new Restaurant(new ThaiMenu(), "Thai Guy"));
         restaurants.add(new Restaurant(new MediterraneanMenu(), "Greek Gyros"));
+        restaurants.add(new Restaurant(new AmericanMenu(), "Brett's Burgers"));
+        restaurants.add(new Restaurant(new ItalianMenu(), "Mama Italia's Pasta"));
 
         // Set up the GUI
-        JPanel panel = new JPanel(new GridLayout(restaurants.size(), 2));
+        JPanel rPanel = new JPanel(new GridLayout(restaurants.size(), 2));
+        JPanel oPanel = new JPanel(getLayout(), rootPaneCheckingEnabled);
         JLabel titleLabel = new JLabel("Menu Items:");
         JLabel orderLabel = new JLabel("Order: ");
         Order order = new Order();
-        panel.add(titleLabel);
-        panel.add(new JLabel(""));
+        oPanel.add(titleLabel);
+        //panel.add(new JLabel(""));
         for (Restaurant r : restaurants) {
-            JButton button = new JButton(r.getName() + " - $" + r.getPrice());
+            JButton button = new JButton(r.getName());
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -38,8 +42,8 @@ public class FoodTown extends JFrame {
                     orderLabel.setText("Order: " + order.getItemsAsString());
                 }
             });
-            panel.add(button);
-            panel.add(new JLabel(""));
+            rPanel.add(button);
+            rPanel.add(new JLabel(""));
         }
         JLabel orderTitleLabel = new JLabel("Order:");
         panel.add(orderTitleLabel);
@@ -70,7 +74,7 @@ public class FoodTown extends JFrame {
     }
 
     // The order class
-    private static class Order {
+    /*private static class Order {
         private ArrayList<FoodItem> items;
 
         public Order() {
@@ -101,7 +105,7 @@ public class FoodTown extends JFrame {
             }
             return sb.toString();
         }
-    }
+    }*/
 
     // The food item class
     private static class FoodItem {
