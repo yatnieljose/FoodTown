@@ -1,5 +1,6 @@
-package Menu;
+package Menu.MenuType;
 
+import Menu.MenuIF;
 import Menu.SubMenu.AbsSubMenu;
 
 public abstract class AbsMenu implements MenuIF

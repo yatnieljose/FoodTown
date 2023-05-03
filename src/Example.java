@@ -1,39 +1,37 @@
 import javax.swing.*;
-
-import Menu.MenuType.*;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class FoodTown extends JFrame {
+public class Example extends JFrame {
 
-    private ArrayList<Restaurant> restaurants;
+    private ArrayList<FoodItem> menuItems;
 
-    public FoodTown() {
+    public Example() {
         super("Food Town");
 
         // Initialize the menu items
-        restaurants = new ArrayList<>();
-        restaurants.add(new Restaurant(new ChineseMenu(), "China Wok"));
-        restaurants.add(new Restaurant(new ThaiMenu(), "Thai Guy"));
-        restaurants.add(new Restaurant(new MediterraneanMenu(), "Greek Gyros"));
+        menuItems = new ArrayList<>();
+        menuItems.add(new FoodItem("Hamburger", 6.99));
+        menuItems.add(new FoodItem("Pizza", 12.99));
+        menuItems.add(new FoodItem("Fries", 2.99));
+        menuItems.add(new FoodItem("Salad", 5.99));
 
         // Set up the GUI
-        JPanel panel = new JPanel(new GridLayout(restaurants.size(), 2));
+        JPanel panel = new JPanel(new GridLayout(menuItems.size(), 2));
         JLabel titleLabel = new JLabel("Menu Items:");
         JLabel orderLabel = new JLabel("Order: ");
         Order order = new Order();
         panel.add(titleLabel);
         panel.add(new JLabel(""));
-        for (Restaurant r : restaurants) {
-            JButton button = new JButton(r.getName() + " - $" + r.getPrice());
+        for (FoodItem item : menuItems) {
+            JButton button = new JButton(item.getName() + " - $" + item.getPrice());
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     // Add the item to the order
-                    order.addItem(r);
+                    order.addItem(item);
                     // Update the order label
                     orderLabel.setText("Order: " + order.getItemsAsString());
                 }
@@ -66,7 +64,7 @@ public class FoodTown extends JFrame {
     }
 
     public static void main(String[] args) {
-        FoodTown app = new FoodTown();
+        Example app = new Example();
     }
 
     // The order class
