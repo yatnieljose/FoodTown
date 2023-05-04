@@ -3,6 +3,7 @@ package User;
 import Restaurant.Restaurant;
 import Order.Order;
 import Order.OrderStatus;
+import Observer.Observer;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import Menu.Menu;
 import Menu.MenuReadWriteLock;
 import Menu.MenuItem.MenuItem;
 
-public class RestaurantUser {
+public class RestaurantUser implements Observer {
     String name;
     Restaurant restaurant;
     Queue<Order> unprocessedOrders;
@@ -52,28 +53,28 @@ public class RestaurantUser {
     private void addOrder(Order order) {
         System.out.println("Order received by " + this.restaurant.getName());
         this.unprocessedOrders.add(order);
-        //order.nextState();
+        order.nextState();
     }
 
     public void processOrder(Order order) {
         System.out.println(this.restaurant.getName() + " has processing the Order.");
         this.unprocessedOrders.remove(order);
-        //order.nextState();
+        order.nextState();
     }
 
     private void orderSentForDelivery(Order order) {
         System.out.println("Order picked by by delivery driver from " + this.restaurant.getName());
         this.ordersOutForDelivery.add(order);
-        //order.nextState();
+        order.nextState();
     }
 
     private void finishOrder(Order order) {
         System.out.println(this.restaurant.getName() + " has confirmed delivery of the Order.");
         this.ordersOutForDelivery.remove(order);
+        order.nextState();
     }
 
-    public Restaurant getRestaurant()
-    {
+    public Restaurant getRestaurant() {
         return this.restaurant;
     }
 }

@@ -4,7 +4,12 @@ import javax.swing.*;
 import Order.Order;
 import User.CustomerUser;
 import User.RestaurantUser;
+import Restaurant.Criteria.*;
+import Menu.Menu;
+import Menu.MenuItem.MenuItem;
+
 import javax.swing.border.*;
+import javax.swing.JRadioButton;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,6 +19,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.awt.List;
 import java.util.Map;
+import java.util.HashMap;
 
 public class FoodTown extends JFrame {
 
@@ -21,19 +27,19 @@ public class FoodTown extends JFrame {
     private CustomerUser user2;
     private OrderController orderController_user1;
     private OrderController orderController_user2;
-    private JPanel footerPanel, filterPanel, mainPanel;
+    private JPanel filterPanel, restaurantPanel, menuItemPanel, footerPanel;
+    private JLabel currentPriceLabel;
+
+    // Cuisine options
+    String[] allCuisineOptions = { "Italian", "Chinese", "American" };
 
     public FoodTown() {
         super("Food Town");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(1200, 600);
         setLayout(new BorderLayout());
 
-        Border border = BorderFactory("FTBorder");
         // create or load menu items, restaurants, users
-
-        //this.user1 = new User("Brett");
-        //this.user2 = new User("Yatniel");
         this.user1 = new CustomerUser("Brett");
         this.user2 = new CustomerUser("Yatniel");
         this.orderController_user1 = new OrderController(user1, new RestaurantManager());
@@ -41,162 +47,184 @@ public class FoodTown extends JFrame {
 
         // set up all displays, checkboxes, buttons (set up the main panel)
 
-        // Set up the footer panel
-        this.footerPanel = new JPanel();
-        this.footerPanel.setBorder(border);
-        footerPanel.setPreferredSize(new Dimension(0, getHeight() / 10));
-
         // Add a panel for filter selection
         this.filterPanel = new JPanel();
-        this.filterPanel.setBorder(border);
-        filterPanel.setPreferredSize((new Dimension(getWidth() / 5, 0)));
+        this.filterPanel.setLayout(new GridLayout(4, 2));
+        this.filterPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+        filterPanel.setPreferredSize((new Dimension(getWidth() / 3, getHeight() / 2)));
 
-        // Set up the main panel
-        this.mainPanel = new JPanel();
-        this.mainPanel.setBorder(border);
-        this.mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        loadRestaurantOptions(this.orderController_user2.getRestaurantUsers());
-
-        this.getContentPane().add(mainPanel, BorderLayout.CENTER);
-        this.getContentPane().add(footerPanel, BorderLayout.SOUTH);
-        this.getContentPane().add(filterPanel, BorderLayout.WEST);
-        
-
-        /*mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        getContentPane().add(mainPanel, BorderLayout.CENTER);
-        mainPanel.add(filterPanel);*/
-
-
-        // Create filter selection components
-        /*JRadioBox filterByCuisineOption = new JRadioBox("Filter by Cuisine");
-        JRadioBox<String> cuisineOptions = new JComboBox<>(Restaurants.allCuisines());
-        JRadioBox filterByRatingOption = new JRadioBox("Filter by Rating");
+        // Filter functionality
+        JRadioButton filterByCuisineOption = new JRadioButton("Filter by Cuisine");
+        JComboBox<String> cuisineOptions = new JComboBox<>(this.allCuisineOptions);
+        JRadioButton filterByRatingOption = new JRadioButton("Filter by Rating");
         JComboBox<String> ratingOptions = new JComboBox<>(
                 new String[] { "at least 1.0", "at least 2.0", "at least 3.0", "at least 4.0", "5.0" });
-        JCheckBox filterByVegetarianOption = new JRadioBox("Filter Vegetarian");
+        JRadioButton filterByVegetarianOption = new JRadioButton("Filter Vegetarian");
         JButton applyFiltersButton = new JButton("Apply Filters");
 
-        filterPanel.add(filterOption1);
-        filterPanel.add(filterOption2);
+        filterPanel.add(filterByCuisineOption);
+        filterPanel.add(cuisineOptions);
+        filterPanel.add(filterByRatingOption);
+        filterPanel.add(ratingOptions);
+        filterPanel.add(filterByVegetarianOption);
         filterPanel.add(applyFiltersButton);
 
         applyFiltersButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Criteria filterCriteria;
+                Criteria filterCriteria = null;
 
                 if (filterByCuisineOption.isSelected()) {
-                    filterCriteria = new CriteriaCuisine(cuisineOptions.getSelectedItem());
+                    System.out.println((String) cuisineOptions.getSelectedItem());
+                    filterCriteria = new CriteriaCuisine((String) cuisineOptions.getSelectedItem());
                 }
                 if (filterByRatingOption.isSelected()) {
-                    filterCriteria = new CriteriaRating(ratingOptions.getSelectedIndex + 1.0);
+                    filterCriteria = new CriteriaRating(ratingOptions.getSelectedIndex() + 1.0);
                 }
                 if (filterByVegetarianOption.isSelected()) {
                     filterCriteria = new CriteriaVegetarian();
                 }
 
-                this.orderController.filterRestaurants(filterCriteria);
-
-                // Update the restaurant display based on the filtered list
-                // ...
+                orderController_user1.filterRestaurants(filterCriteria);
+                loadRestaurantOptions(
+                        (ArrayList<RestaurantUser>) orderController_user1.restaurantManager.getRestaurantUsers());
             }
         });
-*/
-/*        // Set up the restaurant selection panel
-        JPanel restaurantPanel = new JPanel();
-        mainPanel.add(restaurantPanel);
 
-        JComboBox<RestaurantUser> restaurantComboBox = new JComboBox<>();
-        for (Restaurant restaurant : restaurants) {
-            RestaurantUser restaurantUser = new RestaurantUser(restaurant);
-            restaurantComboBox.addItem(restaurantUser);
-        }
-        restaurantPanel.add(restaurantComboBox);
+        // Set up menu item panel
+        this.menuItemPanel = new JPanel();
+        this.menuItemPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+        this.menuItemPanel.setPreferredSize(new Dimension(getWidth() / 3, getHeight()));
+        loadMenuItems(new HashMap<String, MenuItem>());
 
-        // Set up the buttons for placing and processing orders
-        JPanel buttonPanel = new JPanel();
-        mainPanel.add(buttonPanel);
-
+        // Set up the footer panel
+        this.footerPanel = new JPanel();
+        this.footerPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+        footerPanel.setPreferredSize(new Dimension(getWidth(), getHeight() / 10));
         JButton placeOrderButton = new JButton("Place Order");
-        JButton processOrderButton = new JButton("Process Order");
-        buttonPanel.add(placeOrderButton);
-        buttonPanel.add(processOrderButton);
-
-        // Set up the actions for the buttons
         placeOrderButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RestaurantUser selectedRestaurantUser = (RestaurantUser) restaurantComboBox.getSelectedItem();
-                OrderController.handlePlaceOrderRequest(user, selectedRestaurantUser);
+                ArrayList<JCheckBox> selectedBoxes = new ArrayList<>();
+
+                for (Component component : menuItemPanel.getComponents()) {
+                    if (component instanceof JCheckBox) {
+                        JCheckBox checkBox = (JCheckBox) component;
+                        if (checkBox.isSelected()) {
+                            selectedBoxes.add(checkBox);
+                        }
+                    }
+                }
+
+                ArrayList<MenuItem> selectedItems = new ArrayList<>();
+
+                for (JCheckBox checkBox : selectedBoxes) {
+                    selectedItems.add(orderController_user1.getRestaurantManager().getSelectedRestaurantUser().getMenu()
+                            .getItem(checkBox.getText()));
+                }
+                orderController_user1.handlePlacedOrder(selectedItems);
             }
         });
 
-        processOrderButton.addActionListener(new ActionListener() {
+        JButton calcPriceButton = new JButton("Calculate Price");
+        calcPriceButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RestaurantUser selectedRestaurantUser = (RestaurantUser) restaurantComboBox.getSelectedItem();
-                OrderController.handleProcessOrderRequest(selectedRestaurantUser);
+                ArrayList<JCheckBox> selectedBoxes = new ArrayList<>();
+
+                for (Component component : menuItemPanel.getComponents()) {
+                    if (component instanceof JCheckBox) {
+                        JCheckBox checkBox = (JCheckBox) component;
+                        if (checkBox.isSelected()) {
+                            selectedBoxes.add(checkBox);
+                        }
+                    }
+                }
+
+                double currentPrice = 0.0;
+
+                for (JCheckBox checkBox : selectedBoxes) {
+                    currentPrice += orderController_user1.getRestaurantManager().getSelectedRestaurantUser().getMenu()
+                            .getItem(checkBox.getText()).getPrice();
+                }
+                currentPriceLabel.setText("Price = " + currentPrice);
             }
         });
-*/
+
+        this.currentPriceLabel = new JLabel("Price = 0");
+        this.footerPanel.add(placeOrderButton);
+        this.footerPanel.add(calcPriceButton);
+        this.footerPanel.add(this.currentPriceLabel);
+
+        // Set up the main panel
+        this.restaurantPanel = new JPanel();
+        this.restaurantPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+        this.restaurantPanel.setPreferredSize(new Dimension(getWidth() / 3, getHeight()));
+        // this.restaurantPanel.setLayout(new BoxLayout(restaurantPanel,
+        // BoxLayout.Y_AXIS));
+        loadRestaurantOptions(this.orderController_user2.getRestaurantUsers());
+
+        this.getContentPane().add(filterPanel, BorderLayout.WEST);
+        this.getContentPane().add(restaurantPanel, BorderLayout.CENTER);
+        this.getContentPane().add(menuItemPanel, BorderLayout.EAST);
+        this.getContentPane().add(footerPanel, BorderLayout.SOUTH);
+
         this.setVisible(true);
-    }
-    
-    private Border BorderFactory(String string) {
-        return null;
     }
 
     // Load GUI Restaurant User label options
-    public void loadRestaurantOptions(ArrayList<RestaurantUser> rUsers)
-    {
-        Map<String, RestaurantUser> rUserMap = this.orderController_user1.makeRestaurantUserMap(rUsers);
-        for (String rString : rUserMap.keySet())
-        {
-            JLabel rLabel = new JLabel(rString);
-            System.out.println(rString);
-            rLabel.addMouseListener(new MouseListener() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    String srcTxt = labelSelected(e);
-                    System.out.println(srcTxt);
-                }
+    public void loadRestaurantOptions(ArrayList<RestaurantUser> restaurantUsers) {
+        this.restaurantPanel.removeAll();
 
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    // TODO Auto-generated method stub
-                    //throw new UnsupportedOperationException("Unimplemented method 'mousePressed'");
-                }
+        for (RestaurantUser restaurantUser : restaurantUsers) {
+            System.out.println(restaurantUser.getRestaurant().getName());
+            JPanel restaurantRow = new JPanel();
+            restaurantRow.setLayout(new GridLayout(1, 2));
 
-                @Override
-                public void mouseReleased(MouseEvent e) {
-                    // TODO Auto-generated method stub
-                    //throw new UnsupportedOperationException("Unimplemented method 'mouseReleased'");
-                }
+            JLabel restaurantLabel = new JLabel(restaurantUser.getRestaurant().getName());
+            JButton restaurantButton = new JButton("Select");
 
+            restaurantButton.addActionListener(new ActionListener() {
                 @Override
-                public void mouseEntered(MouseEvent e) {
-                    // TODO Auto-generated method stub
-                    //throw new UnsupportedOperationException("Unimplemented method 'mouseEntered'");
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    // TODO Auto-generated method stub
-                    //throw new UnsupportedOperationException("Unimplemented method 'mouseExited'");
+                public void actionPerformed(ActionEvent e) {
+                    orderController_user1.getRestaurantManager().setSelectedRestaurantUser(restaurantUser);
+                    loadMenuItems(restaurantUser.getRestaurant().getMenu().getAllItems());
                 }
             });
-            this.mainPanel.add(rLabel);
+
+            restaurantRow.add(restaurantLabel);
+            restaurantRow.add(restaurantButton);
+
+            this.restaurantPanel.add(restaurantRow);
         }
+
+        this.restaurantPanel.revalidate();
+        this.restaurantPanel.repaint();
     }
 
-    public String labelSelected(MouseEvent event)
-    {
-        JLabel source = (JLabel)event.getSource();
+    public void loadMenuItems(Map<String, MenuItem> menuItemMap) {
+        this.menuItemPanel.removeAll();
+        System.out.println("In loadMenuItems...");
+        ArrayList<MenuItem> menuItems = new ArrayList<>(menuItemMap.values());
+
+        for (MenuItem menuItem : menuItems) {
+            JCheckBox menuItemBox = new JCheckBox(menuItem.getName());
+            this.menuItemPanel.add(menuItemBox);
+        }
+
+        this.menuItemPanel.revalidate();
+        this.menuItemPanel.repaint();
+    }
+
+    public String labelSelected(MouseEvent event) {
+        JLabel source = (JLabel) event.getSource();
         return source.getText();
     }
-    /*public static void main(String[] args)
-    {
-        FoodTown fTown = new FoodTown();
-        fTown.setVisible(true);
-    }*/
+    /*
+     * public static void main(String[] args)
+     * {
+     * FoodTown fTown = new FoodTown();
+     * fTown.setVisible(true);
+     * }
+     */
 }

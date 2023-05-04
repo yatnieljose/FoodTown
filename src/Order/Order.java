@@ -7,7 +7,7 @@ import Menu.MenuItem.MenuItem;
 import java.util.List;
 
 public class Order implements Observable {
-    private OrderState orderState;
+    private OrderStateIF orderState;
     private Observer customer;
     private Observer restaurant;
 
@@ -22,7 +22,15 @@ public class Order implements Observable {
         this.restaurant.update(this);
     }
 
-    public OrderState getOrderState() {
+    public OrderStateIF getOrderState() {
         return this.orderState;
+    }
+
+    public void nextState() {
+        this.orderState = this.orderState.nextState();
+    }
+
+    public String printOrderStatus() {
+        return this.orderState.getOrderStatus().toString();
     }
 }

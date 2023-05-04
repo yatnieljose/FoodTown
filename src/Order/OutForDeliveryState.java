@@ -2,20 +2,17 @@ package Order;
 
 public class OutForDeliveryState extends OrderState {
     public OutForDeliveryState() {
-        super(OrderStatus.PREPARING, new OutForDeliveryState());
+        super(OrderStatus.OUT_FOR_DELIVERY, new DeliveredState());
     }
 
     @Override
-    public OrderStateIF nextState(Order order) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'nextState'");
+    public OrderStateIF nextState() {
+        return this.nextState;
     }
 
     @Override
     public OrderStatus getOrderStatus() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getOrderStatus'");
+        return this.orderStatus;
     }
-    
-    
+
 }

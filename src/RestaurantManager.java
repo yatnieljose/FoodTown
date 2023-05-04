@@ -2,33 +2,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Menu.Menu;
+import Menu.MenuItem.MenuItem;
 import Restaurant.Criteria.Criteria;
 import User.RestaurantUser;
 
 public class RestaurantManager {
     List<RestaurantUser> restaurantUsers;
+    RestaurantUser selectedRestaurantUser;
 
     public RestaurantManager() {
         this.restaurantUsers = new ArrayList<RestaurantUser>();
-        //this.restaurantManagers = new ArrayList<>();
-        this.addRestaurantUser(new RestaurantUser(
-            "Buca de Faggoncini",
-            "Italian",
-            3.0,
-            false,
-        new Menu()));
-        this.addRestaurantUser(new RestaurantUser(
-            "Krusty Krab", 
-            "Mediterranean", 
-            5.0, 
-            false, 
-            new Menu()));
-        this.addRestaurantUser(new RestaurantUser(
-            "Green Goo",
-            "American",
-            1.0,
-            true, 
-            new Menu()));
+        this.selectedRestaurantUser = null;
+        MenuItemData menuItemData = new MenuItemData();
+
+        RestaurantUser bucaUser = new RestaurantUser("Buca de Fini", "Italian", 3.0, false, new Menu());
+        this.addRestaurantUser(bucaUser);
+
+        RestaurantUser krustyKrabUser = new RestaurantUser("Krusty Krab", "Meditteranean", 5.0, false, new Menu());
+        for (MenuItem item : menuItemData.krustyKrabItems) {
+            krustyKrabUser.getRestaurant().getMenu().addItem(item);
+        }
+        this.addRestaurantUser(krustyKrabUser);
+
+        RestaurantUser greenGooUser = new RestaurantUser("Green Goo", "American", 1.0, false, new Menu());
+        for (MenuItem item : menuItemData.greenGooItems) {
+            greenGooUser.getRestaurant().getMenu().addItem(item);
+        }
+        this.addRestaurantUser(greenGooUser);
+    }
+
+    public RestaurantUser getSelectedRestaurantUser() {
+        return this.selectedRestaurantUser;
+    }
+
+    public void setSelectedRestaurantUser(RestaurantUser restaurantUser) {
+        this.selectedRestaurantUser = restaurantUser;
     }
 
     public void addRestaurantUser(RestaurantUser restaurantUser) {

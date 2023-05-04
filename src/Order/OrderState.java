@@ -9,7 +9,7 @@ public abstract class OrderState implements OrderStateIF {
         this.nextState = nextState;
     }
 
-    public abstract OrderStateIF nextState(Order order);
+    public abstract OrderStateIF nextState();
 
     public abstract OrderStatus getOrderStatus();
 }

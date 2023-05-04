@@ -6,14 +6,12 @@ public class PreparingState extends OrderState {
     }
 
     @Override
-    public OrderStateIF nextState(Order order) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'nextState'");
+    public OrderStateIF nextState() {
+        return this.nextState;
     }
 
     @Override
     public OrderStatus getOrderStatus() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getOrderStatus'");
+        return this.orderStatus;
     }
 }
