@@ -1,3 +1,5 @@
+/*import javax.swing.SwingUtilities;
+
 public class Launcher {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -6,5 +8,11 @@ public class Launcher {
                 new FoodTown();
             }
         });
+    }
+}
+*/
+public class Launcher {
+    public static void main(String[] args) {
+        new FoodTown();
     }
 }

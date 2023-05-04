@@ -1,5 +1,8 @@
+package Restaurant;
+
 import Menu.Menu;
 import Order.Order;
+import User.RestaurantUser;
 
 public class Restaurant {
     String name;

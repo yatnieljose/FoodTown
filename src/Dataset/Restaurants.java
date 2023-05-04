@@ -1,3 +1,8 @@
+/*package Dataset;
+
+import java.util.List;
+
+import User.RestaurantUser;
 
 public class Restaurants {
     private static List<RestaurantUser> allRestaurants;
@@ -21,3 +26,4 @@ public class Restaurants {
 List<RestaurantUser> createAllRestaurants() {
     // create all restaurants here
 }
+*/

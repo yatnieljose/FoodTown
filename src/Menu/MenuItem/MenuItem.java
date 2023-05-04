@@ -1,11 +1,18 @@
 package Menu.MenuItem;
 
-public class MenuItem implements MenuItemDiscountIF {
+import Menu.Menu;
+
+public class MenuItem {//implements MenuItemDiscountIF {
     String name;
     String description;
     double price;
     boolean isVegetarian;
     String ingredients;
+
+    public MenuItem()
+    {
+
+    }
 
     private MenuItem(MenuItemBuilder builder) {
         this.name = builder.name;
@@ -27,7 +34,7 @@ public class MenuItem implements MenuItemDiscountIF {
         return this.price;
     }
 
-    public isVegetarian() {
+    public boolean isVegetarian() {
         return this.isVegetarian;
     }
 

@@ -1,4 +1,4 @@
-package Restaurant;
+package Restaurant.Criteria;
 
 import User.RestaurantUser;
 import java.util.List;

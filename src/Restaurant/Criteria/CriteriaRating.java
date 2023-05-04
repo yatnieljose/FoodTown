@@ -3,6 +3,7 @@ package Restaurant.Criteria;
 import java.util.List;
 
 import Restaurant.Restaurant;
+import User.RestaurantUser;
 
 import java.util.ArrayList;
 
@@ -16,12 +17,12 @@ public class CriteriaRating implements Criteria {
     public List<RestaurantUser> meetCriteria(List<RestaurantUser> restaurants) {
         List<RestaurantUser> filteredRestaurantUsers = new ArrayList<>();
 
-        for (RestaurantUser restaurantUser : restaurantUsers) {
+        for (RestaurantUser restaurantUser : restaurants) {
             if (restaurantUser.getRestaurant().getRating() >= this.minRating) {
-                filteredRestaurants.add(restaurantUser);
+                filteredRestaurantUsers.add(restaurantUser);
             }
         }
 
-        return filteredRestaurants;
+        return filteredRestaurantUsers;
     }
 }

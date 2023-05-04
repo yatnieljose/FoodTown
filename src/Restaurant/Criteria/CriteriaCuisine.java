@@ -15,12 +15,12 @@ public class CriteriaCuisine implements Criteria {
     public List<RestaurantUser> meetCriteria(List<RestaurantUser> restaurantUsers) {
         List<RestaurantUser> filteredRestaurantUsers = new ArrayList<>();
 
-        for (RestaurantUser restaurantUser : restaurants) {
+        for (RestaurantUser restaurantUser : restaurantUsers) {
             if (restaurantUser.getRestaurant().getCuisine() == cuisine) {
-                filteredRestaurants.add(restaurantUser);
+                filteredRestaurantUsers.add(restaurantUser);
             }
         }
 
-        return filteredRestaurants;
+        return filteredRestaurantUsers;
     }
 }

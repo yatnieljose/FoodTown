@@ -7,7 +7,7 @@ import Menu.MenuItem.MenuItem;
 import java.util.List;
 
 public class Order implements Observable {
-    private OrderStateIF orderState;
+    private OrderState orderState;
     private Observer customer;
     private Observer restaurant;
 

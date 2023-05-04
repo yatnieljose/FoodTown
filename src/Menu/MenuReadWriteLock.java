@@ -1,5 +1,10 @@
+package Menu;
+
+import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import Menu.MenuItem.MenuItem;
 
 public class MenuReadWriteLock {
     private final Menu menu;
@@ -24,17 +29,17 @@ public class MenuReadWriteLock {
         this.readWriteLock.readLock().lock();
 
         try {
-            return menuItem.getItem(itemName);
+            return menu.getItem(itemName);
         } finally {
             this.readWriteLock.readLock().unlock();
         }
     }
 
-    public Map<MenuItem> getAllItems() {
+    public Map<String, MenuItem> getAllItems() {
         this.readWriteLock.readLock().lock();
 
         try {
-            return this.items;
+            return this.menu.getAllItems();
         } finally {
             this.readWriteLock.readLock().unlock();
         }

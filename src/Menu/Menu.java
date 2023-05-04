@@ -20,7 +20,7 @@ public class Menu {
         return this.items.get(itemName);
     }
 
-    public Map<MenuItem> getAllItems() {
+    public Map<String, MenuItem> getAllItems() {
         return this.items;
     }
 }
